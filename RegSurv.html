@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>R Tutorial with Regression and Survival Analysis</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'R Tutorial with Regression and Survival Analysis',
+                        useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+                      },
+
+      // Author information
+      presenters: [
+            {
+        name:  'Ollie McDonald' ,
+        company: '',
+        gplus: '',
+        twitter: '',
+        www: '',
+        github: ''
+      },
+            ]
+    };
+  </script>
+
+  <script src="RegSurv_files/jquery-1.11.3/jquery.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="RegSurv_files/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+  <script src="RegSurv_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+  <script src="RegSurv_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+  <script src="RegSurv_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+  <link href="RegSurv_files/ioslides-13.5.1/fonts/fonts.css" rel="stylesheet" />
+  <link href="RegSurv_files/ioslides-13.5.1/theme/css/default.css" rel="stylesheet" />
+  <link href="RegSurv_files/ioslides-13.5.1/theme/css/phone.css" rel="stylesheet" />
+  <script src="RegSurv_files/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+  <script src="RegSurv_files/ioslides-13.5.1/js/prettify/prettify.js"></script>
+  <script src="RegSurv_files/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+  <script src="RegSurv_files/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+  <script src="RegSurv_files/ioslides-13.5.1/js/hammer.js"></script>
+  <script src="RegSurv_files/ioslides-13.5.1/js/slide-controller.js"></script>
+  <script src="RegSurv_files/ioslides-13.5.1/js/slide-deck.js"></script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    summary {
+      display: list-item;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+/* https://github.com/ropensci/plotly/pull/524#issuecomment-468142578 */
+slide:not(.current) .plotly.html-widget{
+  display: block;
+}
+
+  </style>
+
+
+</head>
+
+<body style="opacity: 0">
+
+<slides>
+
+  <slide class="title-slide segue nobackground">
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">2/17/2020</p>
+          </hgroup>
+  </slide>
+
+<style type="text/css">
+.main-container {
+  max-width: 1800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+<style>
+div.footnotes {
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 10px;
+  width: 80%;
+  font-size: 0.6em;
+}
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  $('slide:not(.backdrop):not(.title-slide)').append('<div class=\"footnotes\">');
+
+  $('footnote').each(function(index) {
+    var text  = $(this).html();
+    var fnNum = (index+1).toString();
+    $(this).html(fnNum.sup());
+
+    var footnote   = fnNum + '. ' + text + '<br/>';
+    var oldContent = $(this).parents('slide').children('div.footnotes').html();
+    var newContent = oldContent + footnote;
+    $(this).parents('slide').children('div.footnotes').html(newContent);
+  });
+});
+</script>
+
+<slide class=""><hgroup><h2>Contents</h2></hgroup><article  id="contents" class="smaller ">
+
+<ol>
+<li>Intro to R and RStudio</li>
+<li>Working With Data</li>
+<li>Statistics and Modeling</li>
+<li>More info</li>
+</ol>
+
+</article></slide><slide class=""><hgroup><h2>Intro to R and RStudio</h2></hgroup><article  id="intro-to-r-and-rstudio" class="smaller ">
+
+<ul>
+<li>RStudio</li>
+<li>Using Help</li>
+<li>Data types</li>
+<li>Operations</li>
+<li>Working with Data</li>
+<li>Libraries</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>RStudio</h2></hgroup><article  id="rstudio" class="smaller ">
+
+<p><img src="RegSurv_files/Rstudio.png" width="800px" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Using Help</h2></hgroup><article  id="using-help" class="smaller ">
+
+<p>Various functions for finding help</p>
+
+<pre class = 'prettyprint lang-r'># Finding out help about specific functions
+help(sum)
+?sum
+
+# Finding help about topics
+??sum
+
+# Operations requires backticks around
+?`*`</pre>
+
+</article></slide><slide class=""><hgroup><h2>Data Types</h2></hgroup><article  id="data-types" class="smaller ">
+
+<p>Basic Data Types:</p>
+
+<p><strong>Numeric:</strong> Numbers <em>ex.</em> <code>1</code>, <code>1.43</code>, <code>1e10</code></p>
+
+<p><strong>Char</strong>: Strings <em>ex.</em> <code>&quot;cat&quot;</code>, <code>&quot;a&quot;</code>, <code>&quot;two words&quot;</code></p>
+
+<p><strong>Factor</strong>: Categorical Data <em>ex.</em> Male/Female, Age Ranges (10-19, 20-29, …)</p>
+
+<p><strong>Logical</strong>: True/False values</p>
+
+<p>Other types include: functions, expressions, object, etc.</p>
+
+</article></slide><slide class=""><hgroup><h2>Data Types - Vectors</h2></hgroup><article  id="data-types---vectors" class="smaller ">
+
+<p><strong>Vector</strong> combination of elements of the same type</p>
+
+<pre class = 'prettyprint lang-r'>c(1, 2, 3, 4)
+
+1:3
+
+c(&quot;cat&quot;, &quot;dog&quot;, &quot;horse&quot;, &quot;cow&quot;)</pre>
+
+<pre class = 'prettyprint lang-r'>factor(c(&quot;Male&quot;, &quot;Female&quot;, &quot;Male&quot;, &quot;Male&quot;))</pre>
+
+<pre >## [1] Male   Female Male   Male  
+## Levels: Female Male</pre>
+
+</article></slide><slide class=""><hgroup><h2>Data Types - Matrices</h2></hgroup><article  id="data-types---matrices" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>matrix(1:16, ncol = 4, byrow = T)</pre>
+
+<pre >##      [,1] [,2] [,3] [,4]
+## [1,]    1    2    3    4
+## [2,]    5    6    7    8
+## [3,]    9   10   11   12
+## [4,]   13   14   15   16</pre>
+
+<pre class = 'prettyprint lang-r'>t(matrix(1:16, ncol = 4, byrow = T))</pre>
+
+<pre >##      [,1] [,2] [,3] [,4]
+## [1,]    1    5    9   13
+## [2,]    2    6   10   14
+## [3,]    3    7   11   15
+## [4,]    4    8   12   16</pre>
+
+</article></slide><slide class=""><hgroup><h2>Data Types - Data Frames</h2></hgroup><article  id="data-types---data-frames" class="smaller ">
+
+<p>Contains nxp collection of vectors where element i refers to the ith observation</p>
+
+<pre class = 'prettyprint lang-r'>x &lt;- data.frame(name = c(&quot;Alex&quot;, &quot;Brad&quot;, &quot;Catherine&quot;),
+                age = c(25, 46, 32),
+                sex = factor(&quot;Male&quot;, &quot;Male&quot;, &quot;Female&quot;))
+print(x)</pre>
+
+<pre >##        name age    sex
+## 1      Alex  25 Female
+## 2      Brad  46 Female
+## 3 Catherine  32 Female</pre>
+
+<pre class = 'prettyprint lang-r'>str(x)</pre>
+
+<pre >## &#39;data.frame&#39;:    3 obs. of  3 variables:
+##  $ name: Factor w/ 3 levels &quot;Alex&quot;,&quot;Brad&quot;,..: 1 2 3
+##  $ age : num  25 46 32
+##  $ sex : Factor w/ 1 level &quot;Female&quot;: 1 1 1</pre>
+
+</article></slide><slide class=""><hgroup><h2>Data Types - Lists</h2></hgroup><article  id="data-types---lists" class="smaller ">
+
+<p>Lists - collection of objects</p>
+
+<pre class = 'prettyprint lang-r'>list(parents = c(&quot;Jack&quot;, &quot;Jill&quot;),
+     siblings = c(&quot;Nick&quot;, &quot;Joe&quot;, &quot;Kevin&quot;),
+     cars = data.frame(make = c(&quot;Ford&quot;, &quot;Mazda&quot;),
+                       year = c(1999, 2003),
+                       type = c(&quot;truck&quot;, &quot;coupe&quot;)))</pre>
+
+<pre >## $parents
+## [1] &quot;Jack&quot; &quot;Jill&quot;
+## 
+## $siblings
+## [1] &quot;Nick&quot;  &quot;Joe&quot;   &quot;Kevin&quot;
+## 
+## $cars
+##    make year  type
+## 1  Ford 1999 truck
+## 2 Mazda 2003 coupe</pre>
+
+</article></slide><slide class=""><hgroup><h2>Operations in R</h2></hgroup><article  id="operations-in-r" class="smaller ">
+
+<p>Basic Operations</p>
+
+<pre class = 'prettyprint lang-r'>4 * 5</pre>
+
+<pre >## [1] 20</pre>
+
+<pre class = 'prettyprint lang-r'>7 %% 5</pre>
+
+<pre >## [1] 2</pre>
+
+<pre class = 'prettyprint lang-r'>3^2</pre>
+
+<pre >## [1] 9</pre>
+
+<pre class = 'prettyprint lang-r'>log(5)</pre>
+
+<pre >## [1] 1.609438</pre>
+
+</article></slide><slide class=""><hgroup><h2>Operations in R</h2></hgroup><article  id="operations-in-r-1" class="smaller ">
+
+<p>Assignment</p>
+
+<pre class = 'prettyprint lang-r'>x &lt;- 3 * 4 + 2
+print(x)</pre>
+
+<pre >## [1] 14</pre>
+
+<pre class = 'prettyprint lang-r'>family &lt;- data.frame(name = c(&quot;Nick&quot;, &quot;Joe&quot;, &quot;Jill&quot;),
+                     relation = c(&quot;Brother&quot;, &quot;Brother&quot;, &quot;Mother&quot;))
+print(family)</pre>
+
+<pre >##   name relation
+## 1 Nick  Brother
+## 2  Joe  Brother
+## 3 Jill   Mother</pre>
+
+</article></slide><slide class=""><hgroup><h2>Operations in R</h2></hgroup><article  id="operations-in-r-2" class="smaller ">
+
+<p>Assignment</p>
+
+<pre class = 'prettyprint lang-r'>x &lt;- 3 * 4 + 2
+print(x)</pre>
+
+<pre >## [1] 14</pre>
+
+<pre class = 'prettyprint lang-r'>family &lt;- data.frame(name = c(&quot;Nick&quot;, &quot;Joe&quot;, &quot;Jill&quot;),
+                     relation = c(&quot;Brother&quot;, &quot;Brother&quot;, &quot;Mother&quot;))
+print(family)</pre>
+
+<pre >##   name relation
+## 1 Nick  Brother
+## 2  Joe  Brother
+## 3 Jill   Mother</pre>
+
+</article></slide><slide class=""><hgroup><h2>Operations in R</h2></hgroup><article  id="operations-in-r-3" class="smaller ">
+
+<p>Relational</p>
+
+<pre class = 'prettyprint lang-r'>x &lt;- 5:9
+y &lt;- seq(2, 10, 2)
+x &gt; y</pre>
+
+<pre >## [1]  TRUE  TRUE  TRUE FALSE FALSE</pre>
+
+<p>Logical</p>
+
+<pre class = 'prettyprint lang-r'>(x &gt; y) | (x %% 2 == 0)</pre>
+
+<pre >## [1]  TRUE  TRUE  TRUE  TRUE FALSE</pre>
+
+</article></slide><slide class=""><hgroup><h2>Operation Precedence</h2></hgroup><article  id="operation-precedence" class="smaller ">
+
+<p><img src="RegSurv_files/precedence.png" width="350px" height="400px" /> <footnote>datamentor.io/r-programming </footnote></p>
+
+<p>Tip: Use parentheses if unclear</p>
+
+</article></slide><slide class=""><hgroup><h2>Programming Basics - indexing</h2></hgroup><article  id="programming-basics---indexing" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>x &lt;- 10:20
+print(x)</pre>
+
+<pre >##  [1] 10 11 12 13 14 15 16 17 18 19 20</pre>
+
+<pre class = 'prettyprint lang-r'>x[c(1, 2, 3)]</pre>
+
+<pre >## [1] 10 11 12</pre>
+
+<pre class = 'prettyprint lang-r'>x[x%%2 == 0]            # select even values only</pre>
+
+<pre >## [1] 10 12 14 16 18 20</pre>
+
+<pre class = 'prettyprint lang-r'>x[x%%2 == 0] &lt;- NA      # Make even values NA</pre>
+
+</article></slide><slide class=""><hgroup><h2>Programming Basics - if/else statements</h2></hgroup><article  id="programming-basics---ifelse-statements" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>x &lt;- -5
+if(x &gt; 0){
+  print(&quot;positive&quot;)
+} else if(x == 0){
+  print(&quot;zero&quot;)
+} else{
+  print(&quot;negative&quot;)
+}</pre>
+
+<pre >## [1] &quot;negative&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>ifelse(x &gt; 0, &quot;postive&quot;, &quot;not positive&quot;)</pre>
+
+<pre >## [1] &quot;not positive&quot;</pre>
+
+</article></slide><slide class=""><hgroup><h2>Programming Basics - for loop</h2></hgroup><article  id="programming-basics---for-loop" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>x &lt;- c(1, 2, 3, 4, 5)
+for(i in x) print(i)</pre>
+
+<pre >## [1] 1
+## [1] 2
+## [1] 3
+## [1] 4
+## [1] 5</pre>
+
+<pre class = 'prettyprint lang-r'>x &lt;- c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;)
+for(i in x) print(i)</pre>
+
+<pre >## [1] &quot;A&quot;
+## [1] &quot;B&quot;
+## [1] &quot;C&quot;</pre>
+
+<pre class = 'prettyprint lang-r'>for(i in seq_along(x)) print(x[i])</pre>
+
+<pre >## [1] &quot;A&quot;
+## [1] &quot;B&quot;
+## [1] &quot;C&quot;</pre>
+
+</article></slide><slide class=""><hgroup><h2>Programming Basics - while loop</h2></hgroup><article  id="programming-basics---while-loop" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>x &lt;- 5
+i &lt;- 1
+while(i &lt; x){
+  print(i^2)    # what to do
+  i &lt;- i + 1    # increment i
+}</pre>
+
+<pre >## [1] 1
+## [1] 4
+## [1] 9
+## [1] 16</pre>
+
+<pre class = 'prettyprint lang-r'>i &lt;- 1
+while(TRUE){
+  print(i^2)        # what to do
+  if(i &gt;= x) break  # condition to break loop
+  i &lt;- i + 1        # increment i
+}</pre>
+
+<pre >## [1] 1
+## [1] 4
+## [1] 9
+## [1] 16
+## [1] 25</pre>
+
+</article></slide><slide class=""><hgroup><h2>Working with Data</h2></hgroup><article  id="working-with-data" class="smaller ">
+
+<ul>
+<li>Data Frames and Indexing</li>
+<li>Functions</li>
+<li>Importing/Exporting Data</li>
+<li>Data Manipulation</li>
+<li>Plotting</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Cars dataset</h2></hgroup><article  id="cars-dataset" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>data(&quot;mtcars&quot;)
+head(mtcars)   # Shows top 6 observations</pre>
+
+<pre >##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</pre>
+
+<pre class = 'prettyprint lang-r'>str(mtcars)    # Structure of data frame</pre>
+
+<pre >## &#39;data.frame&#39;:    32 obs. of  11 variables:
+##  $ mpg : num  21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
+##  $ cyl : num  6 6 4 6 8 6 8 4 4 6 ...
+##  $ disp: num  160 160 108 258 360 ...
+##  $ hp  : num  110 110 93 110 175 105 245 62 95 123 ...
+##  $ drat: num  3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...
+##  $ wt  : num  2.62 2.88 2.32 3.21 3.44 ...
+##  $ qsec: num  16.5 17 18.6 19.4 17 ...
+##  $ vs  : num  0 0 1 1 0 1 0 1 1 1 ...
+##  $ am  : num  1 1 1 0 0 0 0 0 0 0 ...
+##  $ gear: num  4 4 4 3 3 3 3 4 4 4 ...
+##  $ carb: num  4 4 1 1 2 1 4 2 2 4 ...</pre>
+
+</article></slide><slide class=""><hgroup><h2>Cars dataset</h2></hgroup><article  id="cars-dataset-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>summary(mtcars)    # Summary statistics of data frame</pre>
+
+<pre >##       mpg             cyl             disp             hp       
+##  Min.   :10.40   Min.   :4.000   Min.   : 71.1   Min.   : 52.0  
+##  1st Qu.:15.43   1st Qu.:4.000   1st Qu.:120.8   1st Qu.: 96.5  
+##  Median :19.20   Median :6.000   Median :196.3   Median :123.0  
+##  Mean   :20.09   Mean   :6.188   Mean   :230.7   Mean   :146.7  
+##  3rd Qu.:22.80   3rd Qu.:8.000   3rd Qu.:326.0   3rd Qu.:180.0  
+##  Max.   :33.90   Max.   :8.000   Max.   :472.0   Max.   :335.0  
+##       drat             wt             qsec             vs        
+##  Min.   :2.760   Min.   :1.513   Min.   :14.50   Min.   :0.0000  
+##  1st Qu.:3.080   1st Qu.:2.581   1st Qu.:16.89   1st Qu.:0.0000  
+##  Median :3.695   Median :3.325   Median :17.71   Median :0.0000  
+##  Mean   :3.597   Mean   :3.217   Mean   :17.85   Mean   :0.4375  
+##  3rd Qu.:3.920   3rd Qu.:3.610   3rd Qu.:18.90   3rd Qu.:1.0000  
+##  Max.   :4.930   Max.   :5.424   Max.   :22.90   Max.   :1.0000  
+##        am              gear            carb      
+##  Min.   :0.0000   Min.   :3.000   Min.   :1.000  
+##  1st Qu.:0.0000   1st Qu.:3.000   1st Qu.:2.000  
+##  Median :0.0000   Median :4.000   Median :2.000  
+##  Mean   :0.4062   Mean   :3.688   Mean   :2.812  
+##  3rd Qu.:1.0000   3rd Qu.:4.000   3rd Qu.:4.000  
+##  Max.   :1.0000   Max.   :5.000   Max.   :8.000</pre>
+
+</article></slide><slide class=""><hgroup><h2>Cars dataset</h2></hgroup><article  id="cars-dataset-2" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>pairs(mtcars)    # Pairs plot to quickly see relationships</pre>
+
+<p><img src="RegSurv_files/figure-html/unnamed-chunk-20-1.png" width="720" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Cars dataset</h2></hgroup><article  id="cars-dataset-3" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>mtcars2 &lt;- within(mtcars, {
+   vs &lt;- factor(vs, labels = c(&quot;V&quot;, &quot;S&quot;))
+   am &lt;- factor(am, labels = c(&quot;automatic&quot;, &quot;manual&quot;))
+   cyl  &lt;- ordered(cyl)
+   gear &lt;- ordered(gear)
+   carb &lt;- ordered(carb)
+})
+summary(mtcars2)</pre>
+
+<pre >##       mpg        cyl         disp             hp             drat      
+##  Min.   :10.40   4:11   Min.   : 71.1   Min.   : 52.0   Min.   :2.760  
+##  1st Qu.:15.43   6: 7   1st Qu.:120.8   1st Qu.: 96.5   1st Qu.:3.080  
+##  Median :19.20   8:14   Median :196.3   Median :123.0   Median :3.695  
+##  Mean   :20.09          Mean   :230.7   Mean   :146.7   Mean   :3.597  
+##  3rd Qu.:22.80          3rd Qu.:326.0   3rd Qu.:180.0   3rd Qu.:3.920  
+##  Max.   :33.90          Max.   :472.0   Max.   :335.0   Max.   :4.930  
+##        wt             qsec       vs             am     gear   carb  
+##  Min.   :1.513   Min.   :14.50   V:18   automatic:19   3:15   1: 7  
+##  1st Qu.:2.581   1st Qu.:16.89   S:14   manual   :13   4:12   2:10  
+##  Median :3.325   Median :17.71                         5: 5   3: 3  
+##  Mean   :3.217   Mean   :17.85                                4:10  
+##  3rd Qu.:3.610   3rd Qu.:18.90                                6: 1  
+##  Max.   :5.424   Max.   :22.90                                8: 1</pre>
+
+</article></slide><slide class=""><hgroup><h2>Cars dataset</h2></hgroup><article  id="cars-dataset-4" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>str(mtcars2)</pre>
+
+<pre >## &#39;data.frame&#39;:    32 obs. of  11 variables:
+##  $ mpg : num  21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
+##  $ cyl : Ord.factor w/ 3 levels &quot;4&quot;&lt;&quot;6&quot;&lt;&quot;8&quot;: 2 2 1 2 3 2 3 1 1 2 ...
+##  $ disp: num  160 160 108 258 360 ...
+##  $ hp  : num  110 110 93 110 175 105 245 62 95 123 ...
+##  $ drat: num  3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...
+##  $ wt  : num  2.62 2.88 2.32 3.21 3.44 ...
+##  $ qsec: num  16.5 17 18.6 19.4 17 ...
+##  $ vs  : Factor w/ 2 levels &quot;V&quot;,&quot;S&quot;: 1 1 2 2 1 2 1 2 2 2 ...
+##  $ am  : Factor w/ 2 levels &quot;automatic&quot;,&quot;manual&quot;: 2 2 2 1 1 1 1 1 1 1 ...
+##  $ gear: Ord.factor w/ 3 levels &quot;3&quot;&lt;&quot;4&quot;&lt;&quot;5&quot;: 2 2 2 1 1 1 1 2 2 2 ...
+##  $ carb: Ord.factor w/ 6 levels &quot;1&quot;&lt;&quot;2&quot;&lt;&quot;3&quot;&lt;&quot;4&quot;&lt;..: 4 4 1 1 2 1 4 2 2 4 ...</pre>
+
+</article></slide><slide class=""><hgroup><h2>Indexing</h2></hgroup><article  id="indexing" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>mtcars2$mpg                    # Use $ to select specific variable</pre>
+
+<pre >##  [1] 21.0 21.0 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 17.8 16.4 17.3 15.2 10.4
+## [16] 10.4 14.7 32.4 30.4 33.9 21.5 15.5 15.2 13.3 19.2 27.3 26.0 30.4 15.8 19.7
+## [31] 15.0 21.4</pre>
+
+<pre class = 'prettyprint lang-r'>mtcars2$mpg[c(1, 2, 5, 7)]   # [] to slice data</pre>
+
+<pre >## [1] 21.0 21.0 18.7 14.3</pre>
+
+<pre class = 'prettyprint lang-r'>mtcars2[mtcars$cyl == 6,]   # [] to slice data</pre>
+
+<pre >##                 mpg cyl  disp  hp drat    wt  qsec vs        am gear carb
+## Mazda RX4      21.0   6 160.0 110 3.90 2.620 16.46  V    manual    4    4
+## Mazda RX4 Wag  21.0   6 160.0 110 3.90 2.875 17.02  V    manual    4    4
+## Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  S automatic    3    1
+## Valiant        18.1   6 225.0 105 2.76 3.460 20.22  S automatic    3    1
+## Merc 280       19.2   6 167.6 123 3.92 3.440 18.30  S automatic    4    4
+## Merc 280C      17.8   6 167.6 123 3.92 3.440 18.90  S automatic    4    4
+## Ferrari Dino   19.7   6 145.0 175 3.62 2.770 15.50  V    manual    5    6</pre>
+
+</article></slide><slide class=""><hgroup><h2>Functions</h2></hgroup><article  id="functions" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>mean(mtcars2$mpg)      # Mean of a specific column</pre>
+
+<pre >## [1] 20.09062</pre>
+
+<pre class = 'prettyprint lang-r'>mean(mtcars2)          # Dataset contains mixed types</pre>
+
+<pre >## Warning in mean.default(mtcars2): argument is not numeric or logical: returning
+## NA</pre>
+
+<pre >## [1] NA</pre>
+
+<pre class = 'prettyprint lang-r'>colSums(mtcars)        # Acts on each column individually</pre>
+
+<pre >##      mpg      cyl     disp       hp     drat       wt     qsec       vs 
+##  642.900  198.000 7383.100 4694.000  115.090  102.952  571.160   14.000 
+##       am     gear     carb 
+##   13.000  118.000   90.000</pre>
+
+</article></slide><slide class=""><hgroup><h2>Functions - Writing your own</h2></hgroup><article  id="functions---writing-your-own" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>function_name &lt;- function(argument){
+  code to perform function here
+  return(return_value)
+  # OR
+  return_value
+}</pre>
+
+<pre class = 'prettyprint lang-r'>pow &lt;- function(dat, val){
+  # raises data vector (or matrix) to the val power
+  dat^val
+}
+pow(mtcars2$mpg, 2.4)</pre>
+
+<pre >##  [1] 1490.4805 1490.4805 1815.6981 1559.5276 1128.2877 1043.3465  592.6612
+##  [8] 2136.6608 1815.6981 1202.0512 1002.3237  823.4273  936.0750  686.1588
+## [15]  275.9815  275.9815  633.2302 4219.9570 3621.5676 4704.1296 1577.0748
+## [22]  719.1112  686.1588  498.0167 1202.0512 2797.6305 2488.4908 3621.5676
+## [29]  752.9688 1278.5536  664.6898 1559.5276</pre>
+
+</article></slide><slide class=""><hgroup><h2>Importing/Exporting Data</h2></hgroup><article  id="importingexporting-data" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>lung &lt;- read.csv(&quot;~/Desktop/RTutorial/lung_cancer.csv&quot;,
+                 header = T,
+                 stringsAsFactors = F)
+str(lung)</pre>
+
+<pre >## &#39;data.frame&#39;:    137 obs. of  8 variables:
+##  $ treatment            : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ cell_type            : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ survival_days        : int  72 411 228 126 118 10 82 110 314 100 ...
+##  $ status               : int  1 1 1 1 1 1 1 1 1 0 ...
+##  $ karnofsky_score      : int  60 70 60 60 70 20 40 80 50 70 ...
+##  $ months_from_diagnosis: int  7 5 3 9 11 5 10 29 18 6 ...
+##  $ age_years            : int  69 64 38 63 65 49 69 68 43 70 ...
+##  $ prior_therapy        : int  0 10 0 10 10 0 10 0 0 0 ...</pre>
+
+<pre class = 'prettyprint lang-r'>write.table(lung, sep = &quot;\t&quot;, file = &quot;~/Desktop/lung2.txt&quot;)</pre>
+
+</article></slide><slide class=""><hgroup><h2>Data Manipulation</h2></hgroup><article  id="data-manipulation" class="smaller ">
+
+<p>Primary Biliary Cirrhosis The data set found in appendix D of Fleming and Harrington, Counting Processes and Survival Analysis, Wiley, 1991</p>
+
+<p>Variables:</p>
+
+<ul>
+<li>case number</li>
+<li>number of days between registration and the earlier of death, transplantation, or study analysis time in July, 1986</li>
+<li>status</li>
+<li>drug: 1= D-penicillamine, 2=placebo</li>
+<li>age in days</li>
+<li>sex: 0=male, 1=female</li>
+<li>presence of ascites: 0=no 1=yes</li>
+<li>presence of hepatomegaly 0=no 1=yes</li>
+<li>presence of spiders 0=no 1=yes</li>
+<li>presence of edema 0=no edema and no diuretic therapy for edema; .5 = edema present without diuretics, or edema resolved by diuretics; 1 = edema despite diuretic therapy</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Data Manipulation</h2></hgroup><article  id="data-manipulation-1" class="smaller ">
+
+<p>Primary Biliary Cirrhosis The data set found in appendix D of Fleming and Harrington, Counting Processes and Survival Analysis, Wiley, 1991</p>
+
+<p>Variables (cont.):</p>
+
+<ul>
+<li>serum bilirubin in mg/dl</li>
+<li>serum cholesterol in mg/dl</li>
+<li>albumin in gm/dl</li>
+<li>urine copper in ug/day</li>
+<li>alkaline phosphatase in U/liter</li>
+<li>SGOT in U/ml</li>
+<li>triglicerides in mg/dl</li>
+<li>platelets per cubic ml / 1000</li>
+<li>prothrombin time in seconds</li>
+<li>histologic stage of disease</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Data Manipulation</h2></hgroup><article  id="data-manipulation-2" class="smaller ">
+
+<p>First steps: Import data</p>
+
+<pre class = 'prettyprint lang-r'>liver &lt;- read.csv(&quot;~/Desktop/RTutorial/cirrhosis.csv&quot;,
+                  header = T,
+                  stringsAsFactors = F,
+                  na.strings = &quot;.&quot;)</pre>
+
+<p>List of Manipulations:</p>
+
+<ul>
+<li>Combine censored status (0 and 1 -&gt; 0 and 2 -&gt; 1)</li>
+<li>Convert non-numeric data to factors</li>
+<li>Change days to months</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Data Manipulation</h2></hgroup><article  id="data-manipulation-3" class="smaller ">
+
+<p>Combining censored status</p>
+
+<pre class = 'prettyprint lang-r'>table(liver$status)</pre>
+
+<pre >## 
+##   0   1   2 
+## 168  19 125</pre>
+
+<pre class = 'prettyprint lang-r'>liver$status &lt;- ifelse(liver$status %in% c(0, 1), 0, 1)</pre>
+
+<p>Note: replaced status variable with updated version. Sometimes useful to create a completely new variable or create a new copy of the dataset for reproduceability.</p>
+
+</article></slide><slide class=""><hgroup><h2>Data Manipulation</h2></hgroup><article  id="data-manipulation-4" class="smaller ">
+
+<p>Changing binary and categorical data from numeric to factor / char</p>
+
+<pre class = 'prettyprint lang-r'>liver$drug &lt;- liver$drug == 1     # Turn into TRUE/FALSE where FALSE is placebo
+liver &lt;- within(liver, {
+   sex &lt;- factor(sex, labels = c(&quot;Male&quot;, &quot;Female&quot;))
+   ascites &lt;- as.logical(ascites)
+   hepatomegaly &lt;- as.logical(hepatomegaly)
+   spiders &lt;- as.logical(spiders)
+   edema &lt;- factor(edema, labels = c(&quot;None&quot;, &quot;Present w/o diuretics&quot;, &quot;Present despite diuretics&quot;))
+   histologic_stage  &lt;- ordered(histologic_stage) # Ordered factor
+})
+head(liver)</pre>
+
+<pre >##   case_number days status  drug   age    sex ascites hepatomegaly spiders
+## 1           1  400      1  TRUE 21464 Female    TRUE         TRUE    TRUE
+## 2           2 4500      0  TRUE 20617 Female   FALSE         TRUE    TRUE
+## 3           3 1012      1  TRUE 25594   Male   FALSE        FALSE   FALSE
+## 4           4 1925      1  TRUE 19994 Female   FALSE         TRUE    TRUE
+## 5           5 1504      0 FALSE 13918 Female   FALSE         TRUE    TRUE
+## 6           6 2503      1 FALSE 24201 Female   FALSE         TRUE   FALSE
+##                       edema bilirubin cholesterol albumin urine_copper
+## 1 Present despite diuretics      14.5         261    2.60          156
+## 2                      None       1.1         302    4.14           54
+## 3     Present w/o diuretics       1.4         176    3.48          210
+## 4     Present w/o diuretics       1.8         244    2.54           64
+## 5                      None       3.4         279    3.53          143
+## 6                      None       0.8         248    3.98           50
+##   alkaline_phosphatase   SGOT triglicerides platelets prothrombin_time
+## 1               1718.0 137.95           172       190             12.2
+## 2               7394.8 113.52            88       221             10.6
+## 3                516.0  96.10            55       151             12.0
+## 4               6121.8  60.63            92       183             10.3
+## 5                671.0 113.15            72       136             10.9
+## 6                944.0  93.00            63        NA             11.0
+##   histologic_stage
+## 1                4
+## 2                3
+## 3                4
+## 4                4
+## 5                3
+## 6                3</pre>
+
+</article></slide><slide class=""><hgroup><h2>Plotting - Scatterplots</h2></hgroup><article  id="plotting---scatterplots" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>plot(x = liver$albumin, y = liver$days)</pre>
+
+<p><img src="RegSurv_files/figure-html/unnamed-chunk-32-1.png" width="720" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Plotting - Scatterplots</h2></hgroup><article  id="plotting---scatterplots-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>plot(x = liver$albumin, y = liver$days, col = liver$status + 1)</pre>
+
+<p><img src="RegSurv_files/figure-html/unnamed-chunk-33-1.png" width="720" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Plotting - Scatterplots</h2></hgroup><article  id="plotting---scatterplots-2" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>plot(x = liver$albumin, y = liver$days, col = liver$histologic_stage)</pre>
+
+<p><img src="RegSurv_files/figure-html/unnamed-chunk-34-1.png" width="720" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Plotting - Histograms</h2></hgroup><article  id="plotting---histograms" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>hist(liver$days)</pre>
+
+<p><img src="RegSurv_files/figure-html/unnamed-chunk-35-1.png" width="720" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Plotting - Histograms</h2></hgroup><article  id="plotting---histograms-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>hist(liver$days, breaks = 30)</pre>
+
+<p><img src="RegSurv_files/figure-html/unnamed-chunk-36-1.png" width="720" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Plotting - Density Plot</h2></hgroup><article  id="plotting---density-plot" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>plot(density(liver$days))</pre>
+
+<p><img src="RegSurv_files/figure-html/unnamed-chunk-37-1.png" width="720" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Plotting</h2></hgroup><article  id="plotting" class="smaller ">
+
+<p>Boxplots</p>
+
+<pre class = 'prettyprint lang-r'>boxplot(data = liver, days~sex)</pre>
+
+<p><img src="RegSurv_files/figure-html/unnamed-chunk-38-1.png" width="720" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Plotting</h2></hgroup><article  id="plotting-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>boxplot(data = liver, days~drug + ascites)</pre>
+
+<p><img src="RegSurv_files/figure-html/unnamed-chunk-39-1.png" width="720" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Plotting</h2></hgroup><article  id="plotting-2" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>boxplot(data = liver, days~drug + edema + ascites)</pre>
+
+<p><img src="RegSurv_files/figure-html/unnamed-chunk-40-1.png" width="720" /></p>
+
+<p>Time to do some modeling</p>
+
+</article></slide><slide class=""><hgroup><h2>Statistics and Modeling</h2></hgroup><article  id="statistics-and-modeling" class="smaller ">
+
+<ul>
+<li>Statistics and Summary Info</li>
+<li>Regression</li>
+<li>Survival Analysis</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Statistics and Summary Info</h2></hgroup><article  id="statistics-and-summary-info" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>summary(liver)</pre>
+
+<pre >##   case_number          days          status          drug        
+##  Min.   :  1.00   Min.   :  41   Min.   :0.0000   Mode :logical  
+##  1st Qu.: 78.75   1st Qu.:1191   1st Qu.:0.0000   FALSE:154      
+##  Median :156.50   Median :1840   Median :0.0000   TRUE :158      
+##  Mean   :156.50   Mean   :2006   Mean   :0.4006                  
+##  3rd Qu.:234.25   3rd Qu.:2697   3rd Qu.:1.0000                  
+##  Max.   :312.00   Max.   :4556   Max.   :1.0000                  
+##                                                                  
+##       age            sex       ascites        hepatomegaly     spiders       
+##  Min.   : 9598   Male  : 36   Mode :logical   Mode :logical   Mode :logical  
+##  1st Qu.:15428   Female:276   FALSE:288       FALSE:152       FALSE:222      
+##  Median :18188                TRUE :24        TRUE :160       TRUE :90       
+##  Mean   :18269                                                               
+##  3rd Qu.:20715                                                               
+##  Max.   :28650                                                               
+##                                                                              
+##                        edema       bilirubin       cholesterol    
+##  None                     :263   Min.   : 0.300   Min.   : 120.0  
+##  Present w/o diuretics    : 29   1st Qu.: 0.800   1st Qu.: 249.5  
+##  Present despite diuretics: 20   Median : 1.350   Median : 309.5  
+##                                  Mean   : 3.256   Mean   : 369.5  
+##                                  3rd Qu.: 3.425   3rd Qu.: 400.0  
+##                                  Max.   :28.000   Max.   :1775.0  
+##                                                   NA&#39;s   :28      
+##     albumin      urine_copper    alkaline_phosphatase      SGOT       
+##  Min.   :1.96   Min.   :  4.00   Min.   :  289.0      Min.   : 26.35  
+##  1st Qu.:3.31   1st Qu.: 41.25   1st Qu.:  871.5      1st Qu.: 80.60  
+##  Median :3.55   Median : 73.00   Median : 1259.0      Median :114.70  
+##  Mean   :3.52   Mean   : 97.65   Mean   : 1982.7      Mean   :122.56  
+##  3rd Qu.:3.80   3rd Qu.:123.00   3rd Qu.: 1980.0      3rd Qu.:151.90  
+##  Max.   :4.64   Max.   :588.00   Max.   :13862.4      Max.   :457.25  
+##                 NA&#39;s   :2                                             
+##  triglicerides      platelets     prothrombin_time histologic_stage
+##  Min.   : 33.00   Min.   : 62.0   Min.   : 9.00    1: 16           
+##  1st Qu.: 84.25   1st Qu.:199.8   1st Qu.:10.00    2: 67           
+##  Median :108.00   Median :257.0   Median :10.60    3:120           
+##  Mean   :124.70   Mean   :261.9   Mean   :10.73    4:109           
+##  3rd Qu.:151.00   3rd Qu.:322.5   3rd Qu.:11.10                    
+##  Max.   :598.00   Max.   :563.0   Max.   :17.10                    
+##  NA&#39;s   :30       NA&#39;s   :4</pre>
+
+</article></slide><slide class=""><hgroup><h2>Statistics and Summary Info</h2></hgroup><article  id="statistics-and-summary-info-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>mean(liver$days)</pre>
+
+<pre >## [1] 2006.362</pre>
+
+<pre class = 'prettyprint lang-r'>var(liver$days)</pre>
+
+<pre >## [1] 1261760</pre>
+
+<pre class = 'prettyprint lang-r'>sd(liver$days)</pre>
+
+<pre >## [1] 1123.281</pre>
+
+</article></slide><slide class=""><hgroup><h2>Statistical Tests</h2></hgroup><article  id="statistical-tests" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>t.test(data = liver, days ~ ascites)</pre>
+
+<pre >## 
+##  Welch Two Sample t-test
+## 
+## data:  days by ascites
+## t = 6.4868, df = 28.51, p-value = 4.582e-07
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##   884.7703 1700.4866
+## sample estimates:
+## mean in group FALSE  mean in group TRUE 
+##           2105.7951            813.1667</pre>
+
+</article></slide><slide class=""><hgroup><h2>Linear Regression</h2></hgroup><article  id="linear-regression" class="smaller ">
+
+<p>Suppose we believe there is a mathematical relationship between variables. We’d like to model the underlying relationship as a linear function: \[y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + ... + \beta_p x_p + \epsilon\] where \(\epsilon\) represents the error between the fitted line and a data point at the corresponding values of <strong>x</strong> \[\epsilon \sim N(0, \sigma^2)\]</p>
+
+<p><img src="residuals-1.png" width="50%" /> <footnote><a href='https://blog.bigml.com/2019/03/27/linear-regression-technical-overview/' title=''>https://blog.bigml.com/2019/03/27/linear-regression-technical-overview/</a></footnote></p>
+
+</article></slide><slide class=""><hgroup><h2>Linear Regression - Liver Cirrhosis</h2></hgroup><article  id="linear-regression---liver-cirrhosis" class="smaller ">
+
+<p>We are interested in modeling the survival time (in days) as a function of other variables. ex. Simple Linear Regression for a single variable, albumin</p>
+
+<pre class = 'prettyprint lang-r'>plot(liver$albumin, liver$days)</pre>
+
+<p><img src="RegSurv_files/figure-html/unnamed-chunk-45-1.png" width="432" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Linear Regression - Liver Cirrhosis</h2></hgroup><article  id="linear-regression---liver-cirrhosis-1" class="smaller ">
+
+<p>We are interested in modeling the survival time (in days) as a function of other variables. ex. Simple Linear Regression for a single variable, albumin</p>
+
+<pre class = 'prettyprint lang-r'>g &lt;- lm(days ~ albumin, data = liver)
+summary(g)</pre>
+
+<pre >## 
+## Call:
+## lm(formula = days ~ albumin, data = liver)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2834.4  -722.4  -126.5   597.4  2726.5 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  -2097.8      484.8  -4.328 2.04e-05 ***
+## albumin       1166.0      136.7   8.526 6.75e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 1013 on 310 degrees of freedom
+## Multiple R-squared:   0.19,  Adjusted R-squared:  0.1874 
+## F-statistic:  72.7 on 1 and 310 DF,  p-value: 6.745e-16</pre>
+
+</article></slide><slide class=""><hgroup><h2>Linear Regression - Liver Cirrhosis</h2></hgroup><article  id="linear-regression---liver-cirrhosis-2" class="smaller ">
+
+<p>Predicted Model: \[Survival = -2097.8 + 1166.0 * Albumin\]</p>
+
+<pre class = 'prettyprint lang-r'>plot(liver$albumin, liver$days)
+abline(g, col = &quot;red&quot;)</pre>
+
+<p><img src="RegSurv_files/figure-html/unnamed-chunk-47-1.png" width="432" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Linear Regression - Liver Cirrhosis</h2></hgroup><article  id="linear-regression---liver-cirrhosis-3" class="smaller ">
+
+<p>We are interested in modeling the survival time (in days) as a function of other variables. ex. Simple Linear Regression for a single variable, albumin</p>
+
+<pre class = 'prettyprint lang-r'>g &lt;- lm(days ~ . - status - case_number, data = liver)
+summary(g)</pre>
+
+<pre >## 
+## Call:
+## lm(formula = days ~ . - status - case_number, data = liver)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2652.59  -592.04   -73.16   567.77  2474.73 
+## 
+## Coefficients:
+##                                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                    -9.666e+02  1.069e+03  -0.904 0.366657    
+## drugTRUE                       -5.017e+01  1.144e+02  -0.438 0.661405    
+## age                            -4.931e-03  1.640e-02  -0.301 0.763943    
+## sexFemale                       8.459e+01  1.899e+02   0.445 0.656411    
+## ascitesTRUE                    -1.384e+02  3.257e+02  -0.425 0.671153    
+## hepatomegalyTRUE               -6.114e+01  1.339e+02  -0.457 0.648269    
+## spidersTRUE                    -1.282e+02  1.396e+02  -0.918 0.359308    
+## edemaPresent w/o diuretics     -1.479e+02  2.103e+02  -0.703 0.482518    
+## edemaPresent despite diuretics -4.423e+02  3.376e+02  -1.310 0.191405    
+## bilirubin                      -5.923e+01  1.869e+01  -3.169 0.001714 ** 
+## cholesterol                    -2.887e-01  2.935e-01  -0.984 0.326270    
+## albumin                         5.770e+02  1.654e+02   3.489 0.000571 ***
+## urine_copper                   -2.033e+00  7.935e-01  -2.563 0.010962 *  
+## alkaline_phosphatase            1.033e-01  2.772e-02   3.728 0.000238 ***
+## SGOT                            6.505e-01  1.162e+00   0.560 0.575930    
+## triglicerides                   5.412e-01  1.015e+00   0.533 0.594225    
+## platelets                       5.889e-02  6.581e-01   0.089 0.928772    
+## prothrombin_time                1.255e+02  6.585e+01   1.906 0.057784 .  
+## histologic_stage.L             -5.294e+02  2.147e+02  -2.466 0.014338 *  
+## histologic_stage.Q              6.983e+01  1.688e+02   0.414 0.679473    
+## histologic_stage.C             -5.813e+01  1.193e+02  -0.487 0.626547    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 908.8 on 255 degrees of freedom
+##   (36 observations deleted due to missingness)
+## Multiple R-squared:  0.3811, Adjusted R-squared:  0.3326 
+## F-statistic: 7.852 on 20 and 255 DF,  p-value: &lt; 2.2e-16</pre>
+
+</article></slide><slide class=""><hgroup><h2>Survival Analysis</h2></hgroup><article  id="survival-analysis" class="smaller ">
+
+<p>Kaplan-Meier estimator provides a non-parametric estimate for survival time, \[P(T &gt; t).\] Data may be censored, in that the study ends or patients drop out before the event time is observed. A Kaplan-Meier estimator still accounts for censored data.</p>
+
+<pre class = 'prettyprint lang-r'>library(survival)</pre>
+
+<pre >## 
+## Attaching package: &#39;survival&#39;</pre>
+
+<pre >## The following object is masked _by_ &#39;.GlobalEnv&#39;:
+## 
+##     lung</pre>
+
+<pre class = 'prettyprint lang-r'>head(Surv(liver$days, liver$status))</pre>
+
+<pre >## [1]  400  4500+ 1012  1925  1504+ 2503</pre>
+
+<pre class = 'prettyprint lang-r'>plot(Surv(liver$days, liver$status), mark.time = T)</pre>
+
+<p><img src="RegSurv_files/figure-html/unnamed-chunk-49-1.png" width="432" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Log-Rank Test for Differences</h2></hgroup><article  id="log-rank-test-for-differences" class="smaller ">
+
+<p>Survival conditioned on drug status</p>
+
+<pre class = 'prettyprint lang-r'>survdiff(Surv(days, status) ~ drug, data = liver)</pre>
+
+<pre >## Call:
+## survdiff(formula = Surv(days, status) ~ drug, data = liver)
+## 
+##              N Observed Expected (O-E)^2/E (O-E)^2/V
+## drug=FALSE 154       60     61.8    0.0513     0.102
+## drug=TRUE  158       65     63.2    0.0502     0.102
+## 
+##  Chisq= 0.1  on 1 degrees of freedom, p= 0.7</pre>
+
+</article></slide><slide class=""><hgroup><h2>Log-Rank Test for Differences</h2></hgroup><article  id="log-rank-test-for-differences-1" class="smaller ">
+
+<p>Survival conditioned on drug status</p>
+
+<pre class = 'prettyprint lang-r'>plot(survfit(Surv(days, status) ~ drug, data = liver), col = c(1,2))</pre>
+
+<p><img src="RegSurv_files/figure-html/unnamed-chunk-51-1.png" width="384" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Log-Rank Test for Differences</h2></hgroup><article  id="log-rank-test-for-differences-2" class="smaller ">
+
+<p>Useful for qualitative data to show and test differences between categories. Does not provide a model to describe how survival varies with respect to covariates.</p>
+
+<p>Survival conditioned on presence of edema</p>
+
+<pre class = 'prettyprint lang-r'>plot(survfit(Surv(days, status) ~ edema, data = liver), col = c(1, 2, 3))</pre>
+
+<p><img src="RegSurv_files/figure-html/unnamed-chunk-52-1.png" width="384" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Cox Proportional Hazards Model</h2></hgroup><article  id="cox-proportional-hazards-model" class="smaller ">
+
+<p>Define the hazard function as the probability of death occuring in the next dt conditioned on it not yet occuring: \[\lambda(t) = \frac{d}{dt}\frac{P(t &lt;= T &lt; t + dt)}{P(T &gt;= t)} = -\frac{S&#39;(t)}{S(t)}\] The Cox Proportional Hazards model considers the hazard function as a function of the covariates \[\lambda(t | X_i) = \lambda_0(t) \exp(\beta_1 x_1 + \dots + \beta_p x_p)\] so that an increase in a covariate, \(x_i\) by a value of 1 represents an in the hazard by \(\exp(\beta_i)\) \[\frac{\lambda(t | X_1 = n+1)}{\lambda(t | X_1)} =
+\frac{\lambda_0(t) \exp(\beta_1 (n+1) + \dots + \beta_p x_p)}{\lambda_0(t) \exp(\beta_1 n + \dots + \beta_p x_p)} = \frac{\exp(\beta_1 (n+1)}{\exp(\beta_1 n)} = \exp(\beta_1)\]</p>
+
+</article></slide><slide class=""><hgroup><h2>Cox Proportional Hazards Model</h2></hgroup><article  id="cox-proportional-hazards-model-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>coxph(Surv(days, status) ~ albumin, data = liver)</pre>
+
+<pre >## Call:
+## coxph(formula = Surv(days, status) ~ albumin, data = liver)
+## 
+##            coef exp(coef) se(coef)      z      p
+## albumin -1.7957    0.1660   0.2094 -8.576 &lt;2e-16
+## 
+## Likelihood ratio test=63.95  on 1 df, p=1.275e-15
+## n= 312, number of events= 125</pre>
+
+</article></slide><slide class=""><hgroup><h2>Cox Proportional Hazards Model</h2></hgroup><article  id="cox-proportional-hazards-model-2" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>summary(coxph(Surv(days, status) ~ age, data = liver))</pre>
+
+<pre >## Call:
+## coxph(formula = Surv(days, status) ~ age, data = liver)
+## 
+##   n= 312, number of events= 125 
+## 
+##          coef exp(coef)  se(coef)     z Pr(&gt;|z|)    
+## age 1.095e-04 1.000e+00 2.412e-05 4.539 5.65e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+##     exp(coef) exp(-coef) lower .95 upper .95
+## age         1     0.9999         1         1
+## 
+## Concordance= 0.625  (se = 0.027 )
+## Likelihood ratio test= 20.51  on 1 df,   p=6e-06
+## Wald test            = 20.6  on 1 df,   p=6e-06
+## Score (logrank) test = 20.86  on 1 df,   p=5e-06</pre>
+
+</article></slide><slide class=""><hgroup><h2>Cox Proportional Hazards Model</h2></hgroup><article  id="cox-proportional-hazards-model-3" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>age.factor &lt;- cut(liver$age / 365, seq(20, 80, 10)) 
+plot(survfit(Surv(days, status) ~ age.factor, data = liver), col = 1:6)</pre>
+
+<p><img src="RegSurv_files/figure-html/unnamed-chunk-55-1.png" width="720" /></p>
+
+</article></slide><slide class=""><hgroup><h2>Cox Proportional Hazards Model</h2></hgroup><article  id="cox-proportional-hazards-model-4" class="smaller ">
+
+<p>Note: Might need to show in separate R session</p>
+
+<pre class = 'prettyprint lang-r'>summary(coxph(Surv(days, status) ~ . - case_number, data = liver))</pre>
+
+<pre >## Call:
+## coxph(formula = Surv(days, status) ~ . - case_number, data = liver)
+## 
+##   n= 276, number of events= 111 
+##    (36 observations deleted due to missingness)
+## 
+##                                      coef  exp(coef)   se(coef)      z Pr(&gt;|z|)
+## drugTRUE                        1.765e-01  1.193e+00  2.189e-01  0.806  0.42003
+## age                             7.910e-05  1.000e+00  3.186e-05  2.483  0.01304
+## sexFemale                      -3.757e-01  6.868e-01  3.111e-01 -1.208  0.22720
+## ascitesTRUE                     5.899e-04  1.001e+00  3.951e-01  0.001  0.99881
+## hepatomegalyTRUE                5.648e-02  1.058e+00  2.565e-01  0.220  0.82575
+## spidersTRUE                     7.011e-02  1.073e+00  2.491e-01  0.281  0.77839
+## edemaPresent w/o diuretics      2.436e-01  1.276e+00  3.354e-01  0.726  0.46764
+## edemaPresent despite diuretics  1.146e+00  3.146e+00  4.166e-01  2.751  0.00595
+## bilirubin                       8.014e-02  1.083e+00  2.628e-02  3.050  0.00229
+## cholesterol                     4.731e-04  1.000e+00  4.534e-04  1.043  0.29675
+## albumin                        -7.496e-01  4.725e-01  3.104e-01 -2.415  0.01572
+## urine_copper                    2.442e-03  1.002e+00  1.171e-03  2.087  0.03693
+## alkaline_phosphatase            5.228e-07  1.000e+00  4.066e-05  0.013  0.98974
+## SGOT                            3.710e-03  1.004e+00  1.992e-03  1.863  0.06247
+## triglicerides                  -5.177e-04  9.995e-01  1.436e-03 -0.361  0.71846
+## platelets                       8.410e-04  1.001e+00  1.189e-03  0.707  0.47929
+## prothrombin_time                2.763e-01  1.318e+00  1.167e-01  2.367  0.01793
+## histologic_stage.L              1.483e+00  4.408e+00  7.209e-01  2.058  0.03961
+## histologic_stage.Q             -4.849e-01  6.158e-01  5.612e-01 -0.864  0.38758
+## histologic_stage.C              2.886e-01  1.335e+00  3.253e-01  0.887  0.37498
+##                                  
+## drugTRUE                         
+## age                            * 
+## sexFemale                        
+## ascitesTRUE                      
+## hepatomegalyTRUE                 
+## spidersTRUE                      
+## edemaPresent w/o diuretics       
+## edemaPresent despite diuretics **
+## bilirubin                      **
+## cholesterol                      
+## albumin                        * 
+## urine_copper                   * 
+## alkaline_phosphatase             
+## SGOT                           . 
+## triglicerides                    
+## platelets                        
+## prothrombin_time               * 
+## histologic_stage.L             * 
+## histologic_stage.Q               
+## histologic_stage.C               
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+##                                exp(coef) exp(-coef) lower .95 upper .95
+## drugTRUE                          1.1930     0.8382    0.7769    1.8321
+## age                               1.0001     0.9999    1.0000    1.0001
+## sexFemale                         0.6868     1.4560    0.3732    1.2637
+## ascitesTRUE                       1.0006     0.9994    0.4613    2.1704
+## hepatomegalyTRUE                  1.0581     0.9451    0.6400    1.7494
+## spidersTRUE                       1.0726     0.9323    0.6582    1.7479
+## edemaPresent w/o diuretics        1.2759     0.7838    0.6611    2.4623
+## edemaPresent despite diuretics    3.1456     0.3179    1.3901    7.1178
+## bilirubin                         1.0834     0.9230    1.0291    1.1407
+## cholesterol                       1.0005     0.9995    0.9996    1.0014
+## albumin                           0.4725     2.1162    0.2572    0.8682
+## urine_copper                      1.0024     0.9976    1.0001    1.0047
+## alkaline_phosphatase              1.0000     1.0000    0.9999    1.0001
+## SGOT                              1.0037     0.9963    0.9998    1.0076
+## triglicerides                     0.9995     1.0005    0.9967    1.0023
+## platelets                         1.0008     0.9992    0.9985    1.0032
+## prothrombin_time                  1.3183     0.7586    1.0487    1.6572
+## histologic_stage.L                4.4081     0.2269    1.0730   18.1088
+## histologic_stage.Q                0.6158     1.6239    0.2050    1.8497
+## histologic_stage.C                1.3345     0.7493    0.7054    2.5245
+## 
+## Concordance= 0.848  (se = 0.018 )
+## Likelihood ratio test= 169.7  on 20 df,   p=&lt;2e-16
+## Wald test            = 175  on 20 df,   p=&lt;2e-16
+## Score (logrank) test = 295.6  on 20 df,   p=&lt;2e-16</pre>
+
+</article></slide><slide class=""><hgroup><h2>Notes about modeling</h2></hgroup><article  id="notes-about-modeling" class="smaller ">
+
+<ul>
+<li>There are plenty of assumptions that go into the above models. Distributions, relationships between covariates, etc. not considered here.</li>
+<li>Diagnostic methods are also used to test how appropriate these are.</li>
+<li>Also numerous extensions (ex. time-varying covariates)</li>
+<li>Best approach is to pick up a book or take a stats course that covers these topics</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>More info</h2></hgroup><article  id="more-info" class="smaller ">
+
+<ul>
+<li><a href='https://r4ds.had.co.nz/' title=''>https://r4ds.had.co.nz/</a></li>
+<li><a href='https://adv-r.hadley.nz/' title=''>https://adv-r.hadley.nz/</a></li>
+<li><a href='https://rstudio.com/resources/cheatsheets/' title=''>https://rstudio.com/resources/cheatsheets/</a></li>
+<li>Plenty of R resources online</li>
+</ul></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>
